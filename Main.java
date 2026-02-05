@@ -20,7 +20,13 @@ public class Main {
 
 
         String[] lines = fileData.split("\n"); // splits line to line
-
+        int fivOfAKind = 0;
+        int fouOfAKind = 0;
+        int fullHouse = 0;
+        int throfAKind = 0;
+        int twoPair = 0;
+        int onePair = 0;
+        int highCard = 0;
         for (String line : lines) {
 
             String[] hand = line.split("\\|", 2); // Split line into Array of 2 items. the Cardnames (String) & The betting power)
@@ -37,13 +43,35 @@ public class Main {
             for (int i = 0; i < wordOfCard.length; i++) {
                 handvalues[i] = MethodStorage.parseThroughHandResults(i, handArray, wordOfCard);
                 handvaluesString += handvalues[i]; //If we can just get handvalues as a string we can then just parse normally
-                System.out.println(handvalues[i]);
             }
 
-            String s = MethodStorage.determineHandType(handvalues);
-            // Handvalues contains the OCCURENCE DATA of each Card (Ordered as in Word of Card) [Ie: 0,0,1,2,0,0...]
+            String handType = MethodStorage.determineHandType(handvaluesString);
+
+            if (handType == "5oAK") {
+                fivOfAKind++;
+            } else if (handType == "FH") {
+                fullHouse++;
+            } else if (handType == "4oAK") {
+                fouOfAKind++;
+            } else if (handType == "3oAK") {
+                throfAKind++;
+            } else if (handType == "2p") {
+                twoPair++;
+            } else if (handType == "1p") {
+                onePair++;
+            } else {
+                highCard++;
+            }
 
         }
+        System.out.println("Number of five of a kind hands: " + fivOfAKind);
+        System.out.println("Number of full house hands: " + fullHouse);
+        System.out.println("Number of four of a kind hands: " + fouOfAKind);
+        System.out.println("Number of three of a kind hands: " + throfAKind);
+        System.out.println("Number of two pair hands: " + twoPair);
+        System.out.println("Number of one pair hands: " + onePair);
+        System.out.println("Number of high card hands: " + highCard);
+
     }
 }
 

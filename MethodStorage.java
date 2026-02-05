@@ -11,10 +11,65 @@ public class MethodStorage {
         return parsingResults;
     }
 
-    static String determineHandType (int[] determiningHand) {
-        int numof5s = 0;
-        int numof4s = 0;
-        int numof3s = 0;
+    static String determineHandType (String determiningHand) {
 
+        //  0 0 ... 1 0 1 0
+
+        String hand; // 5oAK 4oAK FH 3oAK 2p 1p HC
+        boolean contains5;
+        boolean contains4;
+        boolean contains3;
+        boolean contains2;
+        boolean double2;
+
+
+        if (determiningHand.contains("5")) {
+            contains5 = true;
+        } else {
+            contains5 = false;
+        }
+
+        if (determiningHand.contains("4")) {
+            contains4 = true;
+        } else {
+            contains4 = false;
+        }
+
+        if (determiningHand.contains("3")) {
+            contains3 = true;
+        } else {
+            contains3 = false;
+        }
+
+        int first2Index = determiningHand.indexOf("2");
+        if (first2Index != -1) {
+            contains2 = true;
+            // Search for another "2" starting from the position after the first one
+            double2 = determiningHand.indexOf("2", first2Index + 1) != -1; // Double 2 is if the substring after the point contains another 2
+        } else {
+            contains2 = false;
+            double2 = false;
+        }
+
+
+        // labeling begins here
+
+        if (contains5) {
+            hand = "5oAK";
+        } else if (contains4) {
+            hand = "4oAK";
+        } else if (contains3 && contains2) {
+            hand = "FH";
+        } else if (contains3) {
+            hand = "3oAK";
+        } else if (double2) {
+                hand = "2p";
+        } else if (contains2) {
+            hand = "1p";
+        } else {
+            hand = "HC";
+        }
+
+        return hand;
     }
 }
