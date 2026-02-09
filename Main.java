@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -39,18 +38,24 @@ public class Main {
             String[] handArray = handNames.split(","); //HandArray contains an array of all the CardNames
 
             String[] wordOfCard = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-            int[] handvaluesArray = new int[wordOfCard.length]; // Handvalues contains the OCCURENCE DATA of each Card (Ordered as in Word of Card)
+            int[] handvaluesArray = new int[13]; // Handvalues contains the OCCURENCE DATA of each Card (Ordered as in Word of Card)
             String handvaluesString = ""; // Saving as both an array and string because sometimes we'll need item by item
 
 
+            allHands[index] = new HandClass(handsStrength, handArray); //Creates a HandClass object in the allHands Array at point index
+            HandClass currentHandObject = allHands[index]; // We can refer to it as CurrentHandObject
+
             for (int i = 0; i < wordOfCard.length; i++) {
-                handvaluesArray[i] = HandClass.parseThroughHandResults(i, handArray, wordOfCard); // This assigns occurence data (zero 2's. one 3, zero 4's. two 5... = 0102...)
-                handvaluesString += handvaluesArray[i]; //If we can just get handvalues as a string we can then just parse normally
+                handvaluesArray[i] = currentHandObject.parseThroughHandResults(i, handArray); // This assigns occurence data (zero 2's. one 3, zero 4's. two 5... = 0102...)
+                handvaluesString += handvaluesArray[i]; //If we can just get handvalues as a string we can then just parse normally using .IndexOf and other string commands instead of complicated array shenangigans
             }
 
+            currentHandObject.setHandOccurences(handvaluesString); // Saves this to the Object
+            currentHandObject.determineHandType(handvaluesString); // Determines handtype based on HandValues
 
-            allHands[index] = new HandClass(handsStrength, handArray, handvaluesString);
-            String handType = HandClass.determineHandType(handvaluesString); // HandType defines itself as the result of determinginghandtype process. Aka its wha stores the type of ahdn it is
+
+
+            String handType = currentHandObject.getHandType(); // HandType defines itself as the result of determinginghandtype process. Aka its wha stores the type of ahdn it is
 
             if (handType == "5oAK") {
                 fivOfAKind++;
@@ -80,8 +85,29 @@ public class Main {
 
         // System.out.println(Arrays.toString(allHands));
 
-        for (HandClass HandClass: allHands){
+        for (HandClass handClassinArray: allHands){
+            int preliminaryRank; // The idea is Immediately rank using the variables. All the 50aks tie for first, the FH's for the spot under.. etc
+            if (handClassinArray.handType == "5oAK") {
+                preliminaryRank = 1;
+            } else if (handClassinArray.handType  == "FH") {
+                preliminaryRank = 1 + fivOfAKind;
+            } else if (handClassinArray.handType  == "4oAK") {
+                preliminaryRank = 1 + fivOfAKind + fullHouse;
+            } else if (handClassinArray.handType == "3oAK") {
+                preliminaryRank = 1 + fivOfAKind + fullHouse + fouOfAKind;
+            } else if (handClassinArray.handType == "2p") {
+                preliminaryRank = 1 + fivOfAKind + fullHouse + fouOfAKind + throfAKind;
+            } else if (handClassinArray.handType  == "1p") {
+                preliminaryRank = 1 + fivOfAKind + fullHouse + fouOfAKind + throfAKind + twoPair;
+            } else {
+                preliminaryRank = 1 + fivOfAKind + fullHouse + fouOfAKind + throfAKind + twoPair + onePair;
+            }
 
+            handClassinArray.setRank(preliminaryRank);
+            System.out.println("Type: " + handClassinArray.handType + "Rank: " + preliminaryRank);
+            // Ok now we need to organize them based within the rank
+            // My idea is to take the first object & Parse within wordofCard to compare. [Hand1.Item1.Index > hand2.Item1 Index] and the loser would increase rank by 1
+            // For Each object (Go up against every other) if Handtypes are equal and it loses out then rank goes up by 1.
         }
     }
 }

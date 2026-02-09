@@ -4,9 +4,13 @@ public class HandClass {
     String [] handArray;
     String handOccurences;
     int bettingValue;
+    String handType;
+    String[] wordOfCard = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+    int rank;
+    // Deconvert from static methods
 
     // So we'll refrence each of these occurences across each hand for its value
-    static int parseThroughHandResults(int i, String[] currentHand, String[] wordOfCard){
+    int parseThroughHandResults(int i, String[] currentHand){
         int parsingResults = 0; //Counter of how many results of what we're parsing for (CurrentHand)
         String lookingFor = wordOfCard[i]; //This is the item in word order we are looking for
         for (String currentHandValue: currentHand) { // stores each value in Currenthand as currenthandvalue
@@ -17,7 +21,7 @@ public class HandClass {
         return parsingResults;
     }
 
-    static String determineHandType (String determiningHand) {
+    void determineHandType (String determiningHand) {
 
         //  0 0 ... 1 0 1 0
 
@@ -75,21 +79,28 @@ public class HandClass {
         } else {
             hand = "HC";
         }
-
-        return hand;
+        this.handType = hand; // Hand Contains the TYPE of HAND
     }
 
 
-    public HandClass(int bettingValue, String [] handArray, String handOccurences){
+    public HandClass(int bettingValue, String [] handArray){
         this.bettingValue = bettingValue;
         this.handArray = handArray;
-        this.handOccurences = handOccurences;
-
     }
 
     public String toString( ){
         return bettingValue + " " + Arrays.toString(handArray);
     }
 
+    public void setHandOccurences(String handOccurences){
+        this.handOccurences = handOccurences;
+    }
 
+    public String getHandType(){
+        return handType;
+    }
+
+    public void setRank(int rank){
+        this.rank = rank;
+    }
 }
