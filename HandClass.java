@@ -73,7 +73,7 @@ public class HandClass {
         } else if (contains3) {
             hand = "3oAK";
         } else if (double2) {
-                hand = "2p";
+            hand = "2p";
         } else if (contains2) {
             hand = "1p";
         } else {
