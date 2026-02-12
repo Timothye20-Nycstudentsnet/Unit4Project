@@ -3,8 +3,10 @@ import java.util.Arrays;
 public class HandClass {
     String [] handArray;
     String handOccurences;
+    String jackHandOccurences;
     int bettingValue;
     String handType;
+    String jackHandType;
     String[] wordOfCard = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
     int rank;
     // Deconvert from static methods
@@ -73,7 +75,7 @@ public class HandClass {
         } else if (contains3) {
             hand = "3oAK";
         } else if (double2) {
-            hand = "2p";
+                hand = "2p";
         } else if (contains2) {
             hand = "1p";
         } else {
@@ -94,6 +96,28 @@ public class HandClass {
 
     public void setHandOccurences(String handOccurences){
         this.handOccurences = handOccurences;
+        this.jackHandOccurences = handOccurences;
+        int jackAmt = Integer.parseInt(jackHandOccurences.substring(9, 10)); // Occurence of specifically the jokers
+        System.out.println("Jack Amount: " + jackAmt); // How many of them there are
+        while (jackAmt != 0) {
+            for (int i = 4; i > 0; i++) { // Starting at 4 and going down
+                int nextHighestlocation = jackHandOccurences.indexOf(i); // Location of next highest. make sure it goes through ALL of the 4s before moving onward
+                while (nextHighestlocation != -1){ // While the current number is still detected (make sure to define nexthighestlocation somewhewre within the loop)
+                    int siphoningIndex = Integer.parseInt(jackHandOccurences.substring(nextHighestlocation, nextHighestlocation+1)); // Siphon index is the index of which we're currently looking at
+                    while (jackAmt != 0 && siphoningIndex < 6 ) {
+                        siphoningIndex++;
+                        jackAmt--;
+                        jackHandOccurences.setCharAt(1, "0"); // redefine this to be the item in particular at jackhandoccurence string being updated to siphoningoindex
+                    }
+
+                }
+
+
+            }
+
+
+        }
+
     }
 
     public String getHandType(){

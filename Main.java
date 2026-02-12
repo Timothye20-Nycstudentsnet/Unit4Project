@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -114,72 +113,64 @@ public class Main {
             // For Each object (Go up against every other) if Handtypes are equal and it loses out then rank goes up by 1.
 
 
-
             int comparisonsRankCounter = 0; // this counts how many times it LOSES a matchup. we only add when it loses cause we only need to know how many other hands its worse than
-            for (HandClass comparisonHand: allHands){ //Inside this loop is all the code that runs once a matchup
-                int handitemindex = 0; // Resets handitemindex to 0
+            for (HandClass comparisonHand: allHands){
+                System.out.println("-----------------------------------");
+                boolean completedMatchup = false; // turn this true to end the loop
+                int handitemindex = 0; // we'll make an index tha goes through the first 4 items for comparisons sake
                 if (handClassinArray == comparisonHand) {
-                    System.out.println("Comparing Same Hand, Skip");
+                    System.out.println("Duplicate");
                     continue; // Skips same hand
                 }
 
-                boolean completedMatchup = false; // turn this true to end the loop
-                while (completedMatchup != true) {
-                    if (!handClassinArray.handType.equals(comparisonHand.handType)) { // if theyre NOT even the same hand, end early
-                        completedMatchup = true;
-                    } else { // Turn this back to if-else by putting all this definitions atop. this is temporary to reduce debugging lines
-                        String firstHandArrayItem = handClassinArray.handArray[handitemindex];
-                        String comparisonHandArrayItem = comparisonHand.handArray[handitemindex]; // These give u the current item
+                String inArrayHandType = handClassinArray.handType;
+                String comparisonHandType = comparisonHand.handType;
 
-                        int locationOfFirstHandItem = wordOfCardString.indexOf(firstHandArrayItem);
-                        System.out.println("FirstItem Hand" + Arrays.toString(handClassinArray.handArray) + " || FirstArrayType: " + handClassinArray.handType + " || Location of card [" + firstHandArrayItem + "] = " + locationOfFirstHandItem);
-                        int locationOfComparisonHandItem = wordOfCardString.indexOf(comparisonHandArrayItem);
-                        System.out.println("Comparison Hand" + Arrays.toString(comparisonHand.handArray) + " || ComparisonArrayType: " + comparisonHand.handType + " || Location of Comparison card [" + comparisonHandArrayItem + "] = " + locationOfComparisonHandItem);
+                if (!inArrayHandType.equals(comparisonHandType)) { // if theyre NOT even the same hand, end early
+                    completedMatchup = true;
+                    System.out.println("Incompatable hand type, skip");
+                } else {
 
-                        if (locationOfFirstHandItem < locationOfComparisonHandItem) { // If they're the same hand & The comparison item has the lesser index (appears earlier)
+
+                    String firstHandArrayItem = handClassinArray.handArray[handitemindex];
+                    String comparisonHandArrayItem = comparisonHand.handArray[handitemindex];
+                    int locationOfFirstHandItem = wordOfCardString.indexOf(firstHandArrayItem);
+                    System.out.println("FirstItem Hand" + Arrays.toString(handClassinArray.handArray) + " || Type: " + handClassinArray.handType + "Location of Comparison item [" +  firstHandArrayItem + "] = " + locationOfFirstHandItem);
+                    int locationOfComparisonHandItem = wordOfCardString.indexOf(comparisonHandArrayItem);
+                    System.out.println("Comparison Hand" + Arrays.toString(comparisonHand.handArray) + " ||  Type: " + comparisonHand.handType + "Location of Comparison item [" + comparisonHandArrayItem + "] = " + locationOfComparisonHandItem);// These give u the current item
+                         while (completedMatchup != true) {
+                            if (locationOfFirstHandItem < locationOfComparisonHandItem) { // If they're the same hand & The comparison item has the lesser index (appears earlier)
                             comparisonsRankCounter ++; // Loss
-                            System.out.println("Loss");
                             completedMatchup = true;
-                        } else if (locationOfFirstHandItem > locationOfComparisonHandItem) {
-                            System.out.println("Victory");
+                            System.out.println("Loss");
+                            } else if (locationOfFirstHandItem > locationOfComparisonHandItem) {
                             completedMatchup = true; // Victory. Skip
-                        } else { // In this case it appears to be a tie
+                            System.out.println("Victory");
+                            } else { // In this case it appears to be a tie
                             handitemindex++; // Go to next number
+                            System.out.println("Tie. Index is now " + handitemindex);
                             firstHandArrayItem = handClassinArray.handArray[handitemindex];
                             comparisonHandArrayItem = comparisonHand.handArray[handitemindex]; // These give u the current item
                             locationOfFirstHandItem = wordOfCardString.indexOf(firstHandArrayItem);
                             locationOfComparisonHandItem = wordOfCardString.indexOf(comparisonHandArrayItem); // Redefine everything so you can recompare
-                            System.out.println("Location of item " + firstHandArrayItem + " = " + locationOfFirstHandItem + " || Location of Comparison item " + comparisonHandArrayItem + " = " + locationOfComparisonHandItem);
-
+                            System.out.println("Location of item [" + firstHandArrayItem + "] = " + locationOfFirstHandItem);
+                            System.out.println("Location of Comparison item [" + comparisonHandArrayItem + "] = " + locationOfComparisonHandItem);
                             // No completed matchup because they should keep going until something is decided. Each hand is unique so there WILL eventually be an item where they'll differ
                         }
                     }
 
                 }
-
-
-
             }
+
             preliminaryRank += comparisonsRankCounter;
             handClassinArray.setRank(preliminaryRank);
             // The current item has ran through all its matches
-            System.out.println("--------------------------------");
+
             System.out.println("Matchups Lost: " + comparisonsRankCounter + "Final Rank: " + preliminaryRank);
-            System.out.println("--------------------------------");
-
-
 
         }
-
-        int totalBettingValue = 0;
-        System.out.println("Final Rankings");
-        for (HandClass finalRankingsHands: allHands){
-            System.out.println("Rank: " + finalRankingsHands.rank);
-            finalRankingsHands.bettingValue *= finalRankingsHands.rank;
-            totalBettingValue += finalRankingsHands.bettingValue;
+        for (HandClass handTotalling: allHands) {
+            System.out.println("Rank: " + handTotalling.rank);
         }
-
-        System.out.println("Total Bid Value: " + totalBettingValue);
-
     }
 }
