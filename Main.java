@@ -175,8 +175,10 @@ public class Main {
             int reversedRank = (allHands.length + 1) - handTotalling.rank;
             int rankTimesValue = (reversedRank * handTotalling.bettingValue);
             rankTimesValueTotal += rankTimesValue;
-            //System.out.println("Rank: " + handTotalling.rank + "RevRank: " + reversedRank + "BV: " + handTotalling.bettingValue + "Times: " + rankTimesValue + "Total: " + rankTimesValueTotal);
+            System.out.println("Rank: " + handTotalling.rank + "RevRank: " + reversedRank + "BV: " + handTotalling.bettingValue + "Times: " + rankTimesValue );
+
         }
 
+        System.out.println("FINAL Total FOIR RANK : " + rankTimesValueTotal);
     }
 }
