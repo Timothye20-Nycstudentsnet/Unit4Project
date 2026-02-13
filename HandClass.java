@@ -94,31 +94,42 @@ public class HandClass {
         return bettingValue + " " + Arrays.toString(handArray);
     }
 
-    public void setHandOccurences(String handOccurences){
+    public void setHandOccurences(String handOccurences) {
         this.handOccurences = handOccurences;
         this.jackHandOccurences = handOccurences;
-        int jackAmt = Integer.parseInt(jackHandOccurences.substring(9, 10)); // Occurence of specifically the jokers
-        System.out.println("Jack Amount: " + jackAmt); // How many of them there are
-        while (jackAmt != 0) {
-            for (int i = 4; i > 0; i++) { // Starting at 4 and going down
-                int nextHighestlocation = jackHandOccurences.indexOf(i); // Location of next highest. make sure it goes through ALL of the 4s before moving onward
-                while (nextHighestlocation != -1){ // While the current number is still detected (make sure to define nexthighestlocation somewhewre within the loop)
-                    int siphoningIndex = Integer.parseInt(jackHandOccurences.substring(nextHighestlocation, nextHighestlocation+1)); // Siphon index is the index of which we're currently looking at
-                    while (jackAmt != 0 && siphoningIndex < 6 ) {
-                        siphoningIndex++;
-                        jackAmt--;
-                        jackHandOccurences.setCharAt(1, "0"); // redefine this to be the item in particular at jackhandoccurence string being updated to siphoningoindex
-                    }
 
+        // Get Jack count (index 9 based on your original code)
+        int jackAmt = Character.getNumericValue(jackHandOccurences.charAt(9));
+
+        // Set Jacks to 0 in the temporary string so they aren't "re-counted"
+        StringBuilder sb = new StringBuilder(jackHandOccurences);
+        sb.setCharAt(9, '0');
+
+        // Distribute Jacks to the highest available counts
+        while (jackAmt > 0) {
+            boolean found = false;
+            // Look for 4s to make 5s, then 3s to make 4s, etc.
+            for (int i = 4; i >= 1; i--) {
+                int targetIndex = sb.indexOf(String.valueOf(i));
+                if (targetIndex != -1 && targetIndex != 9) {
+                    int currentVal = Character.getNumericValue(sb.charAt(targetIndex));
+                    sb.setCharAt(targetIndex, (char)((currentVal + 1) + '0'));
+                    jackAmt--;
+                    found = true;
+                    break; // Break for loop to re-evaluate highest available
                 }
-
-
             }
-
-
+            // If no other cards exist (e.g., hand was all Jacks)
+            if (!found) {
+                sb.setCharAt(0, (char)(jackAmt + '0')); // Put them elsewhere
+                break;
+            }
         }
 
+        this.jackHandOccurences = sb.toString();
+        System.out.println("New Hand Occurrences: " + this.jackHandOccurences);
     }
+
 
     public String getHandType(){
         return handType;
